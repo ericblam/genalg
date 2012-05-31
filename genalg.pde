@@ -3,7 +3,7 @@ int POPULATION_SIZE = 36;
 int DRAW_OFFSET = int((pow( 2, RADIUS_GENE_SIZE ) + RADIUS_EXTRA) * 2);
 
 //Global Variables
-int popRoot = ceil(sqrt(POPULATION_SIZE));
+float popRoot = sqrt(POPULATION_SIZE);
 int selectedX;
 int selectedY;
 int bestX;
@@ -13,6 +13,9 @@ float totalFitness;
 int speed;
 int generation;
 float mutationRate = 0.05;
+
+int across;
+int bill;
 
 //The actual individuals
 Individual[] population;
@@ -26,12 +29,12 @@ Individual bestI;
  Setup the basic window properties
  ====================================*/
 void setup() {
-  Gene g = new Gene(4);
-  g.display();
-  g.mutate();
-  g.display();
-  Gene q = new Gene(g);
-  q.display();
+  across = ceil(popRoot);
+  bill = round(popRoot);
+  int x = across * DRAW_OFFSET;
+  int y = bill * DRAW_OFFSET;
+  size(x,y);
+  populate();
 }
 
 /*=====================================
@@ -120,6 +123,15 @@ void setTotalFitness() {
  they display nicely in a grid.
  ==================================*/
 void populate() {
+  population = new Individual[POPULATION_SIZE];
+  int y = 1;
+  for(int i = 0; i < popSize; i++) {
+    float acx = ((DRAW_OFFSET / 2) + (DRAW_OFFSET * i)) % (DRAW_OFFSET * across);
+    float acy = (y * DRAW_OFFSET) - (DRAW_OFFSET / 2);
+    population[i] = new Individual(acx,acy);
+    if((i + 1) % across == 0)
+      y++;
+  }
 }
 
 /*====================================

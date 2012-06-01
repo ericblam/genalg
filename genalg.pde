@@ -47,6 +47,14 @@ void setup() {
  If mating mode is set to continuous, call mating season
  ====================================*/
 void draw() {
+  background(255);
+  noFill();
+  rect(selectedX * DRAW_OFFSET, selectedY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
+  for(int i = 0; i < POPULATION_SIZE; i++) {
+     population[i].display(false, false);
+     population[i].setFitness(population[selectedX + selectedY * bill]);
+  }
+  setTotalFitness();
 }
 
 /*=====================================
@@ -56,9 +64,11 @@ void draw() {
  drawn around it.
  ====================================*/
 void mouseClicked() {
+  selectedX = mouseX / DRAW_OFFSET;
+  selectedY = mouseY / DRAW_OFFSET;
 }
 
-/*====================================
+  /*====================================
  The following keys are mapped to actions:
  
  Right Arrow: move forard one generation
@@ -72,6 +82,16 @@ void mouseClicked() {
  ==================================*/
 void keyPressed() {
   println(keyCode); //wil display the integer value for whatever key has been pressed
+  /*
+  Right: 39
+  Up: 38
+  Down: 40
+  Shift: 10
+  Space: 32
+  f: 70
+  m: 77
+  n: 78
+  */
 }
 
 
@@ -85,6 +105,7 @@ void keyPressed() {
  Do not include the "selected" shape as a possible return value
  ==================================*/
 Individual select() {
+  float roulette = random(totalFitness);
   return null;
 }
 
@@ -115,6 +136,10 @@ void mutate() {
  Make sure that each individual has an accurate fitness value
  ==================================*/
 void setTotalFitness() {
+  totalFitness = 0;
+  for(int i = 0; i < POPULATION_SIZE; i++) {
+    totalFitness += population[i].fitness;
+  }
 }
 
 /*====================================
@@ -125,7 +150,7 @@ void setTotalFitness() {
 void populate() {
   population = new Individual[POPULATION_SIZE];
   int y = 1;
-  for(int i = 0; i < popSize; i++) {
+  for(int i = 0; i < POPULATION_SIZE; i++) {
     float acx = ((DRAW_OFFSET / 2) + (DRAW_OFFSET * i)) % (DRAW_OFFSET * across);
     float acy = (y * DRAW_OFFSET) - (DRAW_OFFSET / 2);
     population[i] = new Individual(acx,acy);

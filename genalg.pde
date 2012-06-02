@@ -11,6 +11,7 @@ int bestX;
 int bestY;
 int bestNum;
 boolean continuous = false;
+boolean fitnessDisplay = false;
 float totalFitness;
 int speed = 1; // in hertz
 int generation;
@@ -61,6 +62,10 @@ void draw() {
   for(int i = 0; i < POPULATION_SIZE; i++) {
      population[i].display(false, false);
      population[i].setFitness(selected);
+     if(fitnessDisplay) {
+       fill(0);
+       text(population[i].fitness, population[i].phenotype.x, population[i].phenotype.y + DRAW_OFFSET / 2); 
+     }
   }
   setTotalFitness();
   findBest();
@@ -118,6 +123,8 @@ void keyPressed() {
     continuous = !continuous;
   if(keyCode == spaceC)
     setup();
+  if(keyCode == fC)
+    fitnessDisplay = !fitnessDisplay;
   if(keyCode == mC)
     mutationRate += mutationIncrement;
   if(keyCode == nC)
@@ -151,7 +158,6 @@ Individual select() {
 }
 
 /*====================================
- 
  Replaces the current population with a totally new one by
  selecting pairs of Individuals and "mating" them.
  Make sure that totalFitness is set before you use select().
@@ -164,12 +170,11 @@ void matingSeason() {
   selectedToFirst();
   newPopulation[0] = selected;
   
-  Individual father;
-  Individual mother;
+  Individual parent;
   for(int i = 1; i < POPULATION_SIZE; i++) {
-    father = select();
-    mother = select();
-    newPopulation[i] = father.mate(mother, (int)(population[i].phenotype.x), (int)(population[i].phenotype.y));
+    parent = select();
+    newPopulation[i] = selected.mate(parent, (int)(population[i].phenotype.x), (int)(population[i].phenotype.y));
+    newPopulation[i].setFitness(selected);
   }
   population = newPopulation;
   
@@ -199,7 +204,6 @@ void selectedToFirst() {
 }
 
 /*====================================
- 
  Randomly call the mutate method an Individual (or Individuals)
  in the population.
  ==================================*/
@@ -212,7 +216,6 @@ void mutate() {
 }
 
 /*====================================
- 
  Set the totalFitness to the sum of the fitness values
  of each individual.
  Make sure that each individual has an accurate fitness value

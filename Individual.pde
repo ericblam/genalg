@@ -142,6 +142,7 @@ class Individual {
     for(int i = 0; i < CHROMOSOME_LENGTH; i++) {
       int diff = abs(goal.chromosome[i].value - this.chromosome[i].value);
       fitness -= diff * pow(2, maxGeneLength - chromosome[i].geneLength);
+      //fitness /= maxGeneValue;
     }
   }
 

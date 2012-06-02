@@ -1,5 +1,6 @@
 //"Constants"
 int POPULATION_SIZE = 36;
+float MUTATION_CHANCE = 0.3;
 int DRAW_OFFSET = int((pow( 2, RADIUS_GENE_SIZE ) + RADIUS_EXTRA) * 2);
 
 //Global Variables
@@ -9,6 +10,7 @@ int selectedY;
 int selectedNum;
 int bestX;
 int bestY;
+int bestNum;
 boolean continuous = false;
 float totalFitness;
 int speed;
@@ -53,11 +55,15 @@ void draw() {
   background(255);
   noFill();
   rect(selectedX * DRAW_OFFSET, selectedY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
+  rect(bestX * DRAW_OFFSET, bestY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
   for(int i = 0; i < POPULATION_SIZE; i++) {
      population[i].display(false, false);
      population[i].setFitness(selected);
   }
   setTotalFitness();
+  findBest();
+  noFill();
+  rect(bestX * DRAW_OFFSET, bestY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
 }
 
 /*=====================================
@@ -178,6 +184,28 @@ void populate() {
  square border drawn around it.
  ==================================*/
 void findBest() {
+  if(selectedNum == 0) {
+    bestNum = 1;
+    bestI = population[bestNum];
+    for(int i = 2; i < POPULATION_SIZE; i++) {
+      if(population[i].fitness > bestI.fitness) {
+        bestNum = i;
+        bestI = population[i];
+      }
+    }
+  }
+  else {
+    bestNum = 0;
+    bestI = population[bestNum];
+    for(int i = 1; i < POPULATION_SIZE; i++) {
+      if(population[i].fitness > bestI.fitness && i != selectedNum) {
+        bestNum = i;
+        bestI = population[i];
+      }
+    }
+  }
+  bestX = (bestNum % across);
+  bestY = (bestNum / across);
 }
 
 

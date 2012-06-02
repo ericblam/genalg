@@ -1,6 +1,5 @@
 //"Constants"
-int POPULATION_SIZE = 36;
-float MUTATION_CHANCE = 0.3;
+int POPULATION_SIZE = 25;
 int DRAW_OFFSET = int((pow( 2, RADIUS_GENE_SIZE ) + RADIUS_EXTRA) * 2);
 
 //Global Variables
@@ -16,6 +15,7 @@ float totalFitness;
 int speed;
 int generation;
 float mutationRate = 0.05;
+float mutationIncrement = 0.01;
 
 // Blobs across (across) and down (bill)
 int across;
@@ -65,6 +65,8 @@ void draw() {
   findBest();
   noFill();
   rect(bestX * DRAW_OFFSET, bestY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
+  if(continuous)
+    matingSeason();
 }
 
 /*=====================================
@@ -93,17 +95,27 @@ void mouseClicked() {
  n: decrease mutation rate
  ==================================*/
 void keyPressed() {
-  println(keyCode); //will display the integer value for whatever key has been pressed
-  /*
-  Right: 39
-  Up: 38
-  Down: 40
-  Shift: 16
-  Space: 32
-  f: 70
-  m: 77
-  n: 78
-  */
+  // println(keyCode); // For debugging purposes only
+  int rightC = 39;
+  int upC = 38;
+  int downC = 40;
+  int shiftC = 16;
+  int spaceC = 32;
+  int fC = 70;
+  int mC = 77;
+  int nC = 78;
+  
+  if(keyCode == rightC)
+    matingSeason();
+  if(keyCode == shiftC)
+    continuous = !continuous;
+  if(keyCode == spaceC)
+    setup();
+  if(keyCode == mC)
+    mutationRate += mutationIncrement;
+  if(keyCode == nC)
+    mutationRate -= mutationIncrement;
+  
 }
 
 

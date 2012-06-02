@@ -92,12 +92,12 @@ void mouseClicked() {
  n: decrease mutation rate
  ==================================*/
 void keyPressed() {
-  println(keyCode); //wil display the integer value for whatever key has been pressed
+  println(keyCode); //will display the integer value for whatever key has been pressed
   /*
   Right: 39
   Up: 38
   Down: 40
-  Shift: 10
+  Shift: 16
   Space: 32
   f: 70
   m: 77
@@ -132,11 +132,15 @@ Individual select() {
  Replaces the current population with a totally new one by
  selecting pairs of Individuals and "mating" them.
  Make sure that totalFitness is set before you use select().
- The goal shape (selected) should always be the frist Individual
+ The goal shape (selected) should always be the first Individual
  in the population, unmodified.
  ==================================*/
 
 void matingSeason() {
+  Individual[] newPopulation = new Individual[POPULATION_SIZE];
+  newPopulation[0] = selected;
+  
+  population = newPopulation;
 }
 
 /*====================================

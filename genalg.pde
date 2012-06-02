@@ -6,6 +6,7 @@ int DRAW_OFFSET = int((pow( 2, RADIUS_GENE_SIZE ) + RADIUS_EXTRA) * 2);
 float popRoot = sqrt(POPULATION_SIZE);
 int selectedX;
 int selectedY;
+int selectedNum;
 int bestX;
 int bestY;
 boolean continuous = false;
@@ -35,6 +36,8 @@ void setup() {
   int y = bill * DRAW_OFFSET;
   size(x,y);
   populate();
+  // "Clicks" mouse in order to set a selected individual, temporarily.
+  mouseClicked();
 }
 
 /*=====================================
@@ -52,7 +55,7 @@ void draw() {
   rect(selectedX * DRAW_OFFSET, selectedY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
   for(int i = 0; i < POPULATION_SIZE; i++) {
      population[i].display(false, false);
-     population[i].setFitness(population[selectedX + selectedY * bill]);
+     population[i].setFitness(selected);
   }
   setTotalFitness();
 }
@@ -66,6 +69,8 @@ void draw() {
 void mouseClicked() {
   selectedX = mouseX / DRAW_OFFSET;
   selectedY = mouseY / DRAW_OFFSET;
+  selectedNum = selectedX + selectedY * bill;
+  selected = population[selectedNum];
 }
 
   /*====================================
@@ -106,6 +111,13 @@ void keyPressed() {
  ==================================*/
 Individual select() {
   float roulette = random(totalFitness);
+  float ball = 0;
+  for(int i = 0; i < POPULATION_SIZE; i++) {
+    if(ball >= roulette && i != selectedNum) {
+      return population[i];
+    }
+    ball += population[i].fitness;
+  }
   return null;
 }
 

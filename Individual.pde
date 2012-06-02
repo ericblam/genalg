@@ -86,6 +86,7 @@ class Individual {
    color appropriately
    ====================================*/
   void display(boolean sf, boolean ss) {
+    setPhenotype(phenotype.x, phenotype.y);
     fill(chromosome[RED_COLOR].value, chromosome[GREEN_COLOR].value, chromosome[BLUE_COLOR].value);
     phenotype.display(1, sf, ss);
   }
@@ -142,8 +143,8 @@ class Individual {
     for(int i = 0; i < CHROMOSOME_LENGTH; i++) {
       int diff = abs(goal.chromosome[i].value - this.chromosome[i].value);
       fitness -= diff * (pow(2, maxGeneLength) / pow(2, chromosome[i].geneLength));
-      // fitness = fitness / (CHROMOSOME_LENGTH * maxGeneValue);
     }
+    fitness = fitness / (CHROMOSOME_LENGTH * maxGeneValue);
   }
 
 
@@ -160,6 +161,7 @@ class Individual {
         chromosome[i].mutate();
       }
     }
+    setPhenotype(phenotype.x, phenotype.y);
   }
 }
 

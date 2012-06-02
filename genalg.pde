@@ -1,5 +1,5 @@
 //"Constants"
-int POPULATION_SIZE = 16;
+int POPULATION_SIZE = 25;
 int DRAW_OFFSET = int((pow( 2, RADIUS_GENE_SIZE ) + RADIUS_EXTRA) * 2);
 
 //Global Variables

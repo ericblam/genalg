@@ -115,7 +115,7 @@ void keyPressed() {
   
   if(keyCode == rightC)
     matingSeason();
-  if(keyCode == upC)
+  if(keyCode == upC && speed < 60)
     speed++;
   if(keyCode == downC && speed > 1)
     speed--;
@@ -132,7 +132,7 @@ void keyPressed() {
   
   // Debug key
   if(keyCode == tildeC)
-    selectedToFirst();
+    printChromosome();
 }
 
 
@@ -174,11 +174,14 @@ void matingSeason() {
   for(int i = 1; i < POPULATION_SIZE; i++) {
     parent = select();
     newPopulation[i] = selected.mate(parent, (int)(population[i].phenotype.x), (int)(population[i].phenotype.y));
-    newPopulation[i].setFitness(selected);
   }
   population = newPopulation;
   
   mutate();
+  for(int i = 0; i < POPULATION_SIZE; i++) {
+    population[i].setFitness(selected); 
+  }
+  
   generation++;
   setTotalFitness();
   findBest();
@@ -275,4 +278,34 @@ void findBest() {
   bestY = (bestNum / across);
 }
 
+void printChromosome() {
+  println();
+  print("Selected: [ ");
+  for(int i = 0; i < CHROMOSOME_LENGTH; i++) {
+    print(selected.chromosome[i].value + "/" + pow(2,selected.chromosome[i].geneLength) + " ");
+  }
+  println("], Fitness: " + selected.fitness);
+  
+  print("Selected: [ ");
+  for(int i = 0; i < CHROMOSOME_LENGTH; i++) {
+    for(int j = 0; j < selected.chromosome[i].geneLength; j++)
+      print(selected.chromosome[i].genotype[j]);
+    print(" ");
+  }
+  println("], Fitness: " + selected.fitness);
+  println();
+  print("Best: [ ");
+  for(int i = 0; i < CHROMOSOME_LENGTH; i++) {
+    print(bestI.chromosome[i].value + "/" + pow(2,bestI.chromosome[i].geneLength) + " ");
+  }
+  println("], Fitness:  " + bestI.fitness);
+  
+  print("Best: [ ");
+  for(int i = 0; i < CHROMOSOME_LENGTH; i++) {
+    for(int j = 0; j < bestI.chromosome[i].geneLength; j++)
+      print(bestI.chromosome[i].genotype[j]);
+    print(" ");
+  }
+  println("], Fitness: " + bestI.fitness);
+}
 

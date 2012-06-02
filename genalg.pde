@@ -12,8 +12,7 @@ int bestY;
 int bestNum;
 boolean continuous = false;
 float totalFitness;
-int speed = 1; // In hertz
-int frameCountSpeed;
+int speed = 1; // in hertz
 int generation;
 float mutationRate = 0.05;
 float mutationIncrement = 0.01;
@@ -43,7 +42,6 @@ void setup() {
   // "Clicks" mouse in order to set a selected individual, temporarily.
   mouseClicked();
   generation = 1;
-  frameCountSpeed = 0;
 }
 
 /*=====================================
@@ -68,10 +66,8 @@ void draw() {
   findBest();
   noFill();
   rect(bestX * DRAW_OFFSET, bestY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
-  frameCountSpeed++;
-  if(continuous && frameCountSpeed == frameRate / speed) {
+  if(continuous && (frameCount % round(60 / speed)) == 0) {
     matingSeason();
-    frameCountSpeed = 0;
   }
 }
 

@@ -129,7 +129,7 @@ void keyPressed() {
   
   // Debug key
   if(keyCode == tildeC)
-    mutate();
+    selectedToFirst();
 }
 
 
@@ -147,12 +147,11 @@ Individual select() {
   float ball = 0;
   for(int i = 0; i < POPULATION_SIZE; i++) {
     if(ball >= roulette && i != selectedNum) {
-      println("selected: " + i);
       return population[i];
     }
     ball += population[i].fitness;
   }
-  return null;
+  return population[POPULATION_SIZE - 1];
 }
 
 /*====================================
@@ -166,8 +165,9 @@ Individual select() {
 
 void matingSeason() {
   Individual[] newPopulation = new Individual[POPULATION_SIZE];
+  selectedToFirst();
   newPopulation[0] = selected;
-  selectedX = selectedY = selectedNum = 0;
+  
   Individual father;
   Individual mother;
   for(int i = 1; i < POPULATION_SIZE; i++) {
@@ -176,13 +176,30 @@ void matingSeason() {
     newPopulation[i] = father.mate(mother, (int)(population[i].phenotype.x), (int)(population[i].phenotype.y));
   }
   population = newPopulation;
+  
   mutate();
   generation++;
   setTotalFitness();
   findBest();
+  
   println("Generation: " + generation);
   println("Total Fitness: " + totalFitness);
-  println("Best Fitness: " + bestI.fitness);
+  println("Best Fitness: " + bestI.fitness + "\n");
+}
+
+
+/*====================================
+  Swaps the selected with the first Blob
+ ==================================*/
+void selectedToFirst() {
+  Individual temp = population[0];
+  population[0] = selected;
+  population[selectedNum] = temp;
+  temp.phenotype.x = selected.phenotype.x;
+  temp.phenotype.y = selected.phenotype.y;
+  selected.phenotype.x = DRAW_OFFSET / 2;
+  selected.phenotype.y = DRAW_OFFSET / 2;
+  selectedX = selectedY = selectedNum = 0;
 }
 
 /*====================================

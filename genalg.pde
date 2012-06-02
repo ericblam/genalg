@@ -17,6 +17,7 @@ int speed;
 int generation;
 float mutationRate = 0.05;
 
+// Blobs across (across) and down (bill)
 int across;
 int bill;
 

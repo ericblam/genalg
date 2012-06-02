@@ -1,5 +1,5 @@
 //"Constants"
-int POPULATION_SIZE = 25;
+int POPULATION_SIZE = 16;
 int DRAW_OFFSET = int((pow( 2, RADIUS_GENE_SIZE ) + RADIUS_EXTRA) * 2);
 
 //Global Variables
@@ -12,7 +12,8 @@ int bestY;
 int bestNum;
 boolean continuous = false;
 float totalFitness;
-int speed;
+int speed = 1; // In hertz
+int frameCountSpeed;
 int generation;
 float mutationRate = 0.05;
 float mutationIncrement = 0.01;
@@ -41,6 +42,8 @@ void setup() {
   populate();
   // "Clicks" mouse in order to set a selected individual, temporarily.
   mouseClicked();
+  generation = 1;
+  frameCountSpeed = 0;
 }
 
 /*=====================================
@@ -65,8 +68,11 @@ void draw() {
   findBest();
   noFill();
   rect(bestX * DRAW_OFFSET, bestY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
-  if(continuous)
+  frameCountSpeed++;
+  if(continuous && frameCountSpeed == frameRate / speed) {
     matingSeason();
+    frameCountSpeed = 0;
+  }
 }
 
 /*=====================================
@@ -104,9 +110,14 @@ void keyPressed() {
   int fC = 70;
   int mC = 77;
   int nC = 78;
+  int tildeC = 192;
   
   if(keyCode == rightC)
     matingSeason();
+  if(keyCode == upC)
+    speed++;
+  if(keyCode == downC && speed > 1)
+    speed--;
   if(keyCode == shiftC)
     continuous = !continuous;
   if(keyCode == spaceC)
@@ -116,6 +127,9 @@ void keyPressed() {
   if(keyCode == nC)
     mutationRate -= mutationIncrement;
   
+  // Debug key
+  if(keyCode == tildeC)
+    mutate();
 }
 
 
@@ -133,6 +147,7 @@ Individual select() {
   float ball = 0;
   for(int i = 0; i < POPULATION_SIZE; i++) {
     if(ball >= roulette && i != selectedNum) {
+      println("selected: " + i);
       return population[i];
     }
     ball += population[i].fitness;
@@ -152,8 +167,22 @@ Individual select() {
 void matingSeason() {
   Individual[] newPopulation = new Individual[POPULATION_SIZE];
   newPopulation[0] = selected;
-  
+  selectedX = selectedY = selectedNum = 0;
+  Individual father;
+  Individual mother;
+  for(int i = 1; i < POPULATION_SIZE; i++) {
+    father = select();
+    mother = select();
+    newPopulation[i] = father.mate(mother, (int)(population[i].phenotype.x), (int)(population[i].phenotype.y));
+  }
   population = newPopulation;
+  mutate();
+  generation++;
+  setTotalFitness();
+  findBest();
+  println("Generation: " + generation);
+  println("Total Fitness: " + totalFitness);
+  println("Best Fitness: " + bestI.fitness);
 }
 
 /*====================================
@@ -162,6 +191,11 @@ void matingSeason() {
  in the population.
  ==================================*/
 void mutate() {
+  for(int i = 0; i < POPULATION_SIZE; i++) {
+    if(random(1) < mutationRate && i != selectedNum) {
+      population[i].mutate();
+    } 
+  }
 }
 
 /*====================================

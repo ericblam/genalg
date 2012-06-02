@@ -120,10 +120,10 @@ class Individual {
     Individual child = new Individual(cx, cy);
     for(int i = 0; i < CHROMOSOME_LENGTH; i++) {
       if(round(random(1)) == 0) {
-        child.chromosome[i] = other.chromosome[i];
+        child.chromosome[i] = new Gene(other.chromosome[i]);
       }
       else {
-        child.chromosome[i] = this.chromosome[i];
+        child.chromosome[i] = new Gene(this.chromosome[i]);
       }
     }
     return child;
@@ -153,7 +153,7 @@ class Individual {
    ====================================*/
   void mutate() {
     for(int i = 0; i < CHROMOSOME_LENGTH; i++) {
-      if(round(random(1)) == 0) {
+      if(random(1) < mutationRate) {
         chromosome[i].mutate();
       }
       else {

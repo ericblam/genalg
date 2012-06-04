@@ -125,9 +125,9 @@ void keyPressed() {
     setup();
   if(keyCode == fC)
     fitnessDisplay = !fitnessDisplay;
-  if(keyCode == mC)
+  if(keyCode == mC && mutationRate > 0)
     mutationRate += mutationIncrement;
-  if(keyCode == nC)
+  if(keyCode == nC && mutationRate < 1)
     mutationRate -= mutationIncrement;
   
   // Debug key

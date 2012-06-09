@@ -57,7 +57,9 @@ void setup() {
 void draw() {
   background(255);
   noFill();
+  stroke(0,255,0);
   rect(selectedX * DRAW_OFFSET, selectedY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
+  stroke(0);
   rect(bestX * DRAW_OFFSET, bestY * DRAW_OFFSET, DRAW_OFFSET, DRAW_OFFSET);
   for(int i = 0; i < POPULATION_SIZE; i++) {
      population[i].display(false, false);
@@ -125,9 +127,9 @@ void keyPressed() {
     setup();
   if(keyCode == fC)
     fitnessDisplay = !fitnessDisplay;
-  if(keyCode == mC && mutationRate > 0)
+  if(keyCode == mC && mutationRate < 1)
     mutationRate += mutationIncrement;
-  if(keyCode == nC && mutationRate < 1)
+  if(keyCode == nC && mutationRate > 0)
     mutationRate -= mutationIncrement;
   
   // Debug key
@@ -170,10 +172,13 @@ void matingSeason() {
   selectedToFirst();
   newPopulation[0] = selected;
   
-  Individual parent;
+  Individual mother;
+  Individual father;
   for(int i = 1; i < POPULATION_SIZE; i++) {
-    parent = select();
-    newPopulation[i] = selected.mate(parent, (int)(population[i].phenotype.x), (int)(population[i].phenotype.y));
+    mother = select();
+    father = select();
+    newPopulation[i] = mother.mate(father, (int)(population[i].phenotype.x), (int)(population[i].phenotype.y));
+    //newPopulation[i] = selected.mate(mother, (int)(population[i].phenotype.x), (int)(population[i].phenotype.y));
   }
   population = newPopulation;
   
